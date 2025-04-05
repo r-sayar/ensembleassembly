@@ -12,7 +12,7 @@ This repository contains a bioinformatics pipeline for ensemble genome assembly 
 ├── results                # Results directory
 └── workflow               # Snakemake workflow
     ├── Snakefile          # Main Snakemake file
-    ├── envs               # Conda environments
+    ├── env                # Conda environments
     ├── rules              # Snakemake rules (e.g., assembly, filtering)
     └── scripts            # Auxiliary scripts
 ```
