@@ -1,0 +1,13 @@
+import pandas as pd
+
+# Load configuration
+configfile: "config/config.yaml"
+
+samples = pd.read_table(config["samples"], index_col="sample")
+
+include: "rules/fastqc.smk"
+include: "rules/trimmomatic.smk"
+
+rule all:
+    input:
+        
