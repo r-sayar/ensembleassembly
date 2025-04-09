@@ -1,3 +1,13 @@
+# ignore all inside results
+/results/*
+
+# not the dir itself
+!results/
+
+# ignore .snakemake
+.snakemake/
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
