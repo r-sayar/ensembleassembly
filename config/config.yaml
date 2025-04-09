@@ -1,1 +1,9 @@
 samples: "resources/samples/sample.tsv"
+
+trimmomatic:
+  adapters: "resources/Trimmomatic-0-2.39/adapters/TruSeq3-PE.fa"
+  illuminaclip: "2:30:10:2:True"
+  leading: 3
+  trailing: 3
+  slidingwindow: "4:20"  # Gleitendes Fenster von 4 bp, Mindestqualität 20
+  minlen: 36
