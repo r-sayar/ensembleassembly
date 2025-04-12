@@ -30,3 +30,20 @@ rule fastqc_trim:
         mem_mb = 1024
     wrapper:
         "v5.8.3/bio/fastqc"
+
+
+rule multiqc:
+    input:
+        expand("results/qc/fastqc/{sample}_{idx}.html", idx=['1','2'], sample=samples.index),
+        expand("results/qc/fastqc/{sample}_{idx}_trim.html", idx=['1','2'], sample=samples.index)
+    output:
+        report="results/qc/multiqc_report.html",
+        report_data = directory("results/qc/multiqc_data/")
+    conda:
+        "../env/myenv.yaml"
+    log:
+        "results/logs/multiqc.log"
+    shell:
+        """
+        multiqc results/qc/fastqc/ -o results/qc > {log} 2>&1
+        """
