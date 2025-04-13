@@ -22,7 +22,7 @@ This repository contains a bioinformatics pipeline for ensemble genome assembly 
 1. **Create Conda environment**:
 
    ```bash
-   conda env create -f workflow/envs/myenv.yaml
+   conda env create -f workflow/env/myenv.yaml
    conda activate myenv
    ```
 
