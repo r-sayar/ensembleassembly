@@ -7,13 +7,11 @@ samples = pd.read_table(config["samples"], index_col="sample")
 
 include: "rules/qc.smk"
 include: "rules/trimmomatic.smk"
+include: "rules/denovo_assembly.smk"
 
 rule all:
     input:
-        "results/qc/multiqc_report.html"
-        #expand("results/qc/fastqc/{sample}_{idx}.html", sample = samples.index, idx = ["fq1","fq2"]), # qc bevor trimming
-        #expand("results/trim/{sample}_forward_paired.fq.gz",sample = samples.index), # trimming
-        #expand("results/qc/fastqc/{sample}_{idx}_trim.html", idx=['1','2'], sample=samples.index)
-        #expand("results/qc/fastqc/{sample}_{idx}_trim.html", sample = samples.index, idx =["forward_paired","reverse_paired"]) # qc after trimming
+        "results/qc/multiqc_report.html",
+        expand("results/assembly/{sample}/contigs.fasta", sample=samples.index)
 
         
