@@ -47,3 +47,42 @@ rule multiqc:
         """
         multiqc results/qc/fastqc/ -o results/qc > {log} 2>&1
         """
+
+
+rule busco:
+    input:
+        assembly="results/assembly/{sample}/contigs.fasta"
+    output:
+        "results/qc/busco/{sample}/short_summary.specific.bacteria_odb10.{sample}.txt"
+    conda:
+        "../env/busco.yaml"
+    threads: 5
+    log:
+        "results/logs/busco/{sample}.log"
+    shell:
+        """
+        busco -q -c {threads} -f -m genome -l bacteria -o results/qc/busco/{wildcards.sample} -i {input.assembly} > {log} 2>&1
+        """
+
+
+rule busco2tsv:
+    threads: 1
+    input:
+        "results/qc/busco/{sample}/short_summary.specific.bacteria_odb10.{sample}.txt"
+    output:
+        "results/qc/busco/{sample}/short_summary.specific.bacteria_odb10.{sample}.tsv"
+    shell:
+        r"""
+        perl -lne 'print "{wildcards.sample}\t$1\t$2\t$3\t$4" if /C:([\-\d\.]+).*F:([\-\d\.]+).*M:([\-\d\.]+).*n:(\d+)/' {input} > {output}
+        """
+
+
+rule gather_stats_busco:
+    input:
+        expand("results/qc/busco/{sample}/short_summary.specific.bacteria_odb10.{sample}.tsv", sample=samples.index)
+    output:
+        "results/qc/busco/all_stats.tsv"
+    shell:
+        """
+        cat {input} > {output}
+        """

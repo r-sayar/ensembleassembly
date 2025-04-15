@@ -1,0 +1,6 @@
+name: quast-env
+channels:
+  - bioconda
+  - defaults
+dependencies:
+  - bioconda::quast=5.2.0
