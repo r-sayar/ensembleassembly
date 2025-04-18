@@ -86,3 +86,22 @@ rule gather_stats_busco:
         """
         cat {input} > {output}
         """
+
+
+
+
+rule quast:
+    input:
+        assembly="results/assembly/{sample}/contigs.fasta"
+    output:
+        "results/qc/quast/{sample}/report.html"
+    conda:
+        "../env/quast.yaml"
+    threads: 5
+    log:
+        "results/logs/quast/{sample}/quast.log",
+    shell:
+        """
+        quast -t {threads} --glimmer -o results/qc/quast/{wildcards.sample} {input.assembly} > {log} 2>&1
+        """
+
