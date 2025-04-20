@@ -7,3 +7,5 @@ trimmomatic:
   trailing: 3
   slidingwindow: "4:20"  # Gleitendes Fenster von 4 bp, Mindestqualität 20
   minlen: 36
+
+kraken-db: /buffer/ag_bsc/pmsb_workflows_2025/team4_ensemble_assembly/kraken-db
