@@ -13,8 +13,8 @@ rule all:
     input:
         "results/qc/multiqc_report.html",
         expand("results/assembly/{sample}/contigs.fasta", sample=samples.index),
-        expand("results/qc/busco/{sample}/short_summary.specific.bacteria_odb10.{sample}.tsv", sample=samples.index),
-        "results/qc/busco/all_stats.tsv",
-        expand("results/qc/quast/{sample}/report.html", sample=samples.index)
+        # expand("results/qc/busco/{sample}/short_summary.specific.bacteria_odb10.{sample}.tsv", sample=samples.index),
+        # "results/qc/busco/all_stats.tsv",
+        # expand("results/qc/quast/{sample}/report.html", sample=samples.index)
 
         

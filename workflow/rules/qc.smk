@@ -37,7 +37,8 @@ rule multiqc:
         expand("results/qc/fastqc/{sample}_{idx}.html", idx=['1','2'], sample=samples.index),
         expand("results/qc/fastqc/{sample}_{idx}_trim.html", idx=['1','2'], sample=samples.index),
         expand("results/qc/quast/{sample}/report.html", sample=samples.index),
-        expand("results/qc/busco/{sample}/short_summary.specific.bacteria_odb10.{sample}.tsv", sample=samples.index)
+        expand("results/qc/busco/{sample}/short_summary.specific.bacteria_odb10.{sample}.tsv", sample=samples.index),
+        "results/qc/busco/all_stats.tsv"
     output:
         report="results/qc/multiqc_report.html",
         report_data = directory("results/qc/multiqc_data/")
@@ -47,7 +48,7 @@ rule multiqc:
         "results/logs/multiqc.log"
     shell:
         """
-        multiqc results/qc/fastqc results/qc/quast results/qc/busco -o results/qc > {log} 2>&1
+        multiqc results/qc -c config/my_multiqc_config.yaml -o results/qc > {log} 2>&1
         """
 
 

@@ -1,0 +1,5 @@
+sp:
+  busco:
+    fn: 'short_summary*'
+    ignore_files:
+      - "*.tsv"
