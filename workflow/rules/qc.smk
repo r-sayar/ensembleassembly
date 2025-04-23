@@ -36,9 +36,8 @@ rule multiqc:
     input:
         expand("results/qc/fastqc/{sample}_{idx}.html", idx=['1','2'], sample=samples.index),
         expand("results/qc/fastqc/{sample}_trim_{idx}.html", idx=['1','2'], sample=samples.index),
-        expand("results/qc/quast/{sample}/report.html", sample=samples.index),
-        expand("results/qc/busco/{sample}/short_summary.specific.bacteria_odb10.{sample}.tsv", sample=samples.index),
-        "results/qc/busco/all_stats.tsv"
+        expand("results/qc/quast/reports/{sample}_report.txt", sample=samples.index),
+        expand("results/qc/busco/reports/short_summary_{sample}.txt", sample=samples.index)
     output:
         report="results/qc/multiqc_report.html",
         report_data = directory("results/qc/multiqc_data/")
@@ -48,13 +47,13 @@ rule multiqc:
         "results/logs/multiqc.log"
     shell:
         """
-        multiqc results/qc -c config/my_multiqc_config.yaml -o results/qc > {log} 2>&1
+        multiqc results/qc -o results/qc > {log} 2>&1
         """
 
 
 rule busco:
     input:
-        assembly="results/assembly/{sample}/contigs.fasta"
+        assembly="results/assembly/all_assemblies/{sample}_contigs.fasta"
     output:
         "results/qc/busco/{sample}/short_summary.specific.bacteria_odb10.{sample}.txt"
     conda:
@@ -68,26 +67,15 @@ rule busco:
         """
 
 
-rule busco2tsv:
-    threads: 1
+
+rule busco_summary_for_multiqc:
     input:
         "results/qc/busco/{sample}/short_summary.specific.bacteria_odb10.{sample}.txt"
     output:
-        "results/qc/busco/{sample}/short_summary.specific.bacteria_odb10.{sample}.tsv"
-    shell:
-        r"""
-        perl -lne 'print "{wildcards.sample}\t$1\t$2\t$3\t$4" if /C:([\-\d\.]+).*F:([\-\d\.]+).*M:([\-\d\.]+).*n:(\d+)/' {input} > {output}
-        """
-
-
-rule gather_stats_busco:
-    input:
-        expand("results/qc/busco/{sample}/short_summary.specific.bacteria_odb10.{sample}.tsv", sample=samples.index)
-    output:
-        "results/qc/busco/all_stats.tsv"
+        "results/qc/busco/reports/short_summary_{sample}.txt"
     shell:
         """
-        cat {input} > {output}
+        cp {input} {output}
         """
 
 
@@ -95,9 +83,9 @@ rule gather_stats_busco:
 
 rule quast:
     input:
-        assembly="results/assembly/{sample}/contigs.fasta"
+        assembly="results/assembly/all_assemblies/{sample}_contigs.fasta"
     output:
-        "results/qc/quast/{sample}/report.html"
+        "results/qc/quast/{sample}/report.txt"
     conda:
         "../env/quast.yaml"
     threads: 5
@@ -108,3 +96,13 @@ rule quast:
         quast -t {threads} --glimmer -o results/qc/quast/{wildcards.sample} {input.assembly} > {log} 2>&1
         """
 
+
+rule quast_summary_for_multiqc:
+    input:
+        "results/qc/quast/{sample}/report.txt"
+    output:
+        "results/qc/quast/reports/{sample}_report.txt"
+    shell:
+        """
+        cp {input} {output}
+        """
