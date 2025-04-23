@@ -36,7 +36,7 @@ rule multiqc:
     input:
         expand("results/qc/fastqc/{sample}_{idx}.html", idx=['1','2'], sample=samples.index),
         expand("results/qc/fastqc/{sample}_trim_{idx}.html", idx=['1','2'], sample=samples.index),
-        expand("results/qc/quast/reports/{sample}_report.txt", sample=samples.index),
+        expand("results/qc/quast/{sample}/report.tsv", sample=samples.index),
         expand("results/qc/busco/reports/short_summary_{sample}.txt", sample=samples.index)
     output:
         report="results/qc/multiqc_report.html",
@@ -47,7 +47,7 @@ rule multiqc:
         "results/logs/multiqc.log"
     shell:
         """
-        multiqc results/qc -o results/qc > {log} 2>&1
+        multiqc results/qc/fastqc results/qc/quast/ results/qc/busco/reports -o results/qc > {log} 2>&1
         """
 
 
@@ -85,7 +85,7 @@ rule quast:
     input:
         assembly="results/assembly/all_assemblies/{sample}_contigs.fasta"
     output:
-        "results/qc/quast/{sample}/report.txt"
+        "results/qc/quast/{sample}/report.tsv"
     conda:
         "../env/quast.yaml"
     threads: 5
@@ -94,15 +94,4 @@ rule quast:
     shell:
         """
         quast -t {threads} --glimmer -o results/qc/quast/{wildcards.sample} {input.assembly} > {log} 2>&1
-        """
-
-
-rule quast_summary_for_multiqc:
-    input:
-        "results/qc/quast/{sample}/report.txt"
-    output:
-        "results/qc/quast/reports/{sample}_report.txt"
-    shell:
-        """
-        cp {input} {output}
         """
