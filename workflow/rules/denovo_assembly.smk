@@ -20,3 +20,14 @@ rule spades_assembly:
             --only-assembler \
             > {log} 2>&1
         """
+
+
+rule copy_assemblies:
+    input:
+        "results/assembly/{sample}/contigs.fasta"
+    output:
+        "results/assembly/all_assemblies/{sample}_contigs.fasta"
+    shell:
+        """
+        cp {input} {output}
+        """

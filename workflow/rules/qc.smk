@@ -1,6 +1,6 @@
 rule fastqc_raw:
     input:
-        fq=lambda wildcards: samples.at[wildcards.sample, "fq1" if wildcards.idx == 1 else "fq2"]
+        fq=lambda wildcards: samples.at[wildcards.sample, "fq1" if wildcards.idx == '1' else "fq2"]
     output:
         html="results/qc/fastqc/{sample}_{idx}.html",
         zip="results/qc/fastqc/{sample}_{idx}_fastqc.zip"
@@ -17,10 +17,10 @@ rule fastqc_raw:
 
 rule fastqc_trim:
     input:
-        fq=lambda wildcards: f"results/trim/{wildcards.sample}_{'forward_paired' if wildcards.idx == 1 else 'reverse_paired'}.fq.gz"
+        fq=lambda wildcards: f"results/trim/{wildcards.sample}_trim_{'forward_paired' if wildcards.idx == '1' else 'reverse_paired'}.fq.gz"
     output:
-        html="results/qc/fastqc/{sample}_{idx}_trim.html",
-        zip="results/qc/fastqc/{sample}_{idx}_fastqc_trim.zip"
+        html="results/qc/fastqc/{sample}_trim_{idx}.html",
+        zip="results/qc/fastqc/{sample}_trim_{idx}_fastqc.zip"
     params:
         extra = "--quiet"
     log:
@@ -35,7 +35,9 @@ rule fastqc_trim:
 rule multiqc:
     input:
         expand("results/qc/fastqc/{sample}_{idx}.html", idx=['1','2'], sample=samples.index),
-        expand("results/qc/fastqc/{sample}_{idx}_trim.html", idx=['1','2'], sample=samples.index)
+        expand("results/qc/fastqc/{sample}_trim_{idx}.html", idx=['1','2'], sample=samples.index),
+        expand("results/qc/quast/{sample}/report.tsv", sample=samples.index),
+        expand("results/qc/busco/reports/short_summary_{sample}.txt", sample=samples.index)
     output:
         report="results/qc/multiqc_report.html",
         report_data = directory("results/qc/multiqc_data/")
@@ -45,13 +47,13 @@ rule multiqc:
         "results/logs/multiqc.log"
     shell:
         """
-        multiqc results/qc/fastqc/ -o results/qc > {log} 2>&1
+        multiqc results/qc/fastqc results/qc/quast/ results/qc/busco/reports -o results/qc > {log} 2>&1
         """
 
 
 rule busco:
     input:
-        assembly="results/assembly/{sample}/contigs.fasta"
+        assembly="results/assembly/all_assemblies/{sample}_contigs.fasta"
     output:
         "results/qc/busco/{sample}/short_summary.specific.bacteria_odb10.{sample}.txt"
     conda:
@@ -65,24 +67,31 @@ rule busco:
         """
 
 
-rule busco2tsv:
-    threads: 1
+
+rule busco_summary_for_multiqc:
     input:
         "results/qc/busco/{sample}/short_summary.specific.bacteria_odb10.{sample}.txt"
     output:
-        "results/qc/busco/{sample}/short_summary.specific.bacteria_odb10.{sample}.tsv"
+        "results/qc/busco/reports/short_summary_{sample}.txt"
     shell:
-        r"""
-        perl -lne 'print "{wildcards.sample}\t$1\t$2\t$3\t$4" if /C:([\-\d\.]+).*F:([\-\d\.]+).*M:([\-\d\.]+).*n:(\d+)/' {input} > {output}
+        """
+        cp {input} {output}
         """
 
 
-rule gather_stats_busco:
+
+
+rule quast:
     input:
-        expand("results/qc/busco/{sample}/short_summary.specific.bacteria_odb10.{sample}.tsv", sample=samples.index)
+        assembly="results/assembly/all_assemblies/{sample}_contigs.fasta"
     output:
-        "results/qc/busco/all_stats.tsv"
+        "results/qc/quast/{sample}/report.tsv"
+    conda:
+        "../env/quast.yaml"
+    threads: 5
+    log:
+        "results/logs/quast/{sample}/quast.log",
     shell:
         """
-        cat {input} > {output}
+        quast -t {threads} --glimmer -o results/qc/quast/{wildcards.sample} {input.assembly} > {log} 2>&1
         """

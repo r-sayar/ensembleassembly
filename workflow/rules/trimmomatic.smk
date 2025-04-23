@@ -3,10 +3,10 @@ rule trimm:
         r1 = lambda wildcards: samples.at[wildcards.sample, 'fq1'],
         r2 = lambda wildcards: samples.at[wildcards.sample, 'fq2']
     output:
-        forward_paired="results/trim/{sample}_forward_paired.fq.gz",
-        forward_unpaired="results/trim/{sample}_forward_unpaired.fq.gz",
-        reverse_paired="results/trim/{sample}_reverse_paired.fq.gz",
-        reverse_unpaired="results/trim/{sample}_reverse_unpaired.fq.gz"
+        forward_paired="results/trim/{sample}_trim_forward_paired.fq.gz",
+        forward_unpaired="results/trim/{sample}_trim_forward_unpaired.fq.gz",
+        reverse_paired="results/trim/{sample}_trim_reverse_paired.fq.gz",
+        reverse_unpaired="results/trim/{sample}_trim_reverse_unpaired.fq.gz"
     conda:
         "../env/myenv.yaml"
     log:
