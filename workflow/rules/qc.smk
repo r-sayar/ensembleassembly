@@ -1,6 +1,6 @@
 rule fastqc_raw:
     input:
-        fq=lambda wildcards: samples.at[wildcards.sample, "fq1" if wildcards.idx == 1 else "fq2"]
+        fq=lambda wildcards: samples.at[wildcards.sample, "fq1" if wildcards.idx == '1' else "fq2"]
     output:
         html="results/qc/fastqc/{sample}_{idx}.html",
         zip="results/qc/fastqc/{sample}_{idx}_fastqc.zip"
@@ -17,10 +17,10 @@ rule fastqc_raw:
 
 rule fastqc_trim:
     input:
-        fq=lambda wildcards: f"results/trim/{wildcards.sample}_{'forward_paired' if wildcards.idx == 1 else 'reverse_paired'}.fq.gz"
+        fq=lambda wildcards: f"results/trim/{wildcards.sample}_trim_{'forward_paired' if wildcards.idx == '1' else 'reverse_paired'}.fq.gz"
     output:
-        html="results/qc/fastqc/{sample}_{idx}_trim.html",
-        zip="results/qc/fastqc/{sample}_{idx}_fastqc_trim.zip"
+        html="results/qc/fastqc/{sample}_trim_{idx}.html",
+        zip="results/qc/fastqc/{sample}_trim_{idx}_fastqc.zip"
     params:
         extra = "--quiet"
     log:
@@ -35,7 +35,7 @@ rule fastqc_trim:
 rule multiqc:
     input:
         expand("results/qc/fastqc/{sample}_{idx}.html", idx=['1','2'], sample=samples.index),
-        expand("results/qc/fastqc/{sample}_{idx}_trim.html", idx=['1','2'], sample=samples.index),
+        expand("results/qc/fastqc/{sample}_trim_{idx}.html", idx=['1','2'], sample=samples.index),
         expand("results/qc/quast/{sample}/report.html", sample=samples.index),
         expand("results/qc/busco/{sample}/short_summary.specific.bacteria_odb10.{sample}.tsv", sample=samples.index),
         "results/qc/busco/all_stats.tsv"
