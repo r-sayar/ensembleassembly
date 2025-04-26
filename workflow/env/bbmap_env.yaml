@@ -1,53 +1,10 @@
 name: bbmap_env
 channels:
+  - conda-forge
   - bioconda
   - defaults
   - https://repo.anaconda.com/pkgs/main
   - https://repo.anaconda.com/pkgs/r
 dependencies:
-  - _libgcc_mutex=0.1=main
-  - _openmp_mutex=5.1=1_gnu
-  - bbmap=38.84=h516909a_0
-  - bzip2=1.0.8=h5eee18b_6
-  - ca-certificates=2025.2.25=h06a4308_0
-  - cairo=1.16.0=hb05425b_5
-  - dbus=1.13.18=hb2f20db_0
-  - expat=2.7.1=h6a678d5_0
-  - fontconfig=2.14.1=h55d465d_3
-  - freetype=2.13.3=h4a9f257_0
-  - fribidi=1.0.10=h7b6447c_0
-  - glib=2.78.4=h6a678d5_0
-  - glib-tools=2.78.4=h6a678d5_0
-  - graphite2=1.3.14=h295c915_1
-  - harfbuzz=10.2.0=hf296adc_0
-  - icu=73.1=h6a678d5_0
-  - ld_impl_linux-64=2.40=h12ee557_0
-  - libffi=3.4.4=h6a678d5_1
-  - libgcc-ng=11.2.0=h1234567_1
-  - libglib=2.78.4=hdc74915_0
-  - libgomp=11.2.0=h1234567_1
-  - libiconv=1.16=h5eee18b_3
-  - libmpdec=4.0.0=h5eee18b_0
-  - libpng=1.6.39=h5eee18b_0
-  - libstdcxx-ng=11.2.0=h1234567_1
-  - libuuid=1.41.5=h5eee18b_0
-  - libxcb=1.15=h7f8727e_0
-  - libxml2=2.13.7=hfdd30dd_0
-  - ncurses=6.4=h6a678d5_0
-  - openjdk=21.0.6=h38aa4c6_0
-  - openssl=3.0.16=h5eee18b_0
-  - pango=1.50.7=h0fee60c_1
-  - pcre2=10.42=hebb0a14_1
-  - pip=25.0=py313h06a4308_0
-  - pixman=0.40.0=h7f8727e_1
-  - python=3.13.2=hf623796_100_cp313
-  - python_abi=3.13=0_cp313
-  - readline=8.2=h5eee18b_0
-  - setuptools=75.8.0=py313h06a4308_0
-  - sqlite=3.45.3=h5eee18b_0
-  - tk=8.6.14=h39e8969_0
-  - tzdata=2025a=h04d1e81_0
-  - wheel=0.45.1=py313h06a4308_0
-  - xz=5.6.4=h5eee18b_1
-  - zlib=1.2.13=h5eee18b_1
+  - bbmap=38.84 # Or specify a desired version, e.g., bbmap=39.01
 prefix: /home/mi/sayar99/miniconda3/envs/bbmap_env

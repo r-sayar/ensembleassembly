@@ -7,7 +7,7 @@ rule classify_reads:
     #     r1="/buffer/ag_bsc/pmsb_workflows_2025/team4_ensemble_assembly/DATA/SET1/{sample}_Illumina_MiSeq_paired_end_sequencing_1.fastq.gz",
     #     r2="/buffer/ag_bsc/pmsb_workflows_2025/team4_ensemble_assembly/DATA/SET1/{sample}_Illumina_MiSeq_paired_end_sequencing_2.fastq.gz"
     input:
-        r1="/buffer/ag_bsc/pmsb_workflows_2025/team4_ensemble_assembly/personal-data/{sample}_10_reads_1.fastq.gz",
+        r1="/buffer/ag_bsc/pmsb_workflows_2025/team4_ensemble_assembly/personal-data/{sample}_10_reads_1.fastq.gz", 
         r2="/buffer/ag_bsc/pmsb_workflows_2025/team4_ensemble_assembly/personal-data/{sample}_10_reads_2.fastq.gz"
     output:
         #classified and unclassified reads must have the same path! and need to set in shell as well
