@@ -9,3 +9,5 @@ trimmomatic:
   minlen: 36
 
 kraken-db: /buffer/ag_bsc/pmsb_workflows_2025/team4_ensemble_assembly/kraken-db
+
+busco_lineage: "enterobacterales_odb10"

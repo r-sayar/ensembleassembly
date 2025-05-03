@@ -87,7 +87,7 @@ rule busco:
     input:
         assembly="results/assembly/all_assemblies/{sample}_contigs.fasta"
     output:
-        "results/qc/busco/{sample}/short_summary.specific.enterobacterales_odb10.{sample}.txt"
+        f"results/qc/busco/{{sample}}/short_summary.specific.{config["busco_lineage"]}.{{sample}}.txt"
     conda:
         "../env/busco.yaml"
     threads: 5
@@ -95,13 +95,13 @@ rule busco:
         "results/logs/busco/{sample}.log"
     shell:
         """
-        busco -q -c {threads} -f -m genome -l enterobacterales_odb10 -o results/qc/busco/{wildcards.sample} -i {input.assembly} > {log} 2>&1
+        busco -q -c {threads} -f -m genome -l {config[busco_lineage]} -o results/qc/busco/{wildcards.sample} -i {input.assembly} > {log} 2>&1
         """
 
 
 rule busco_summary_for_multiqc:
     input:
-        "results/qc/busco/{sample}/short_summary.specific.enterobacterales_odb10.{sample}.txt"
+        f"results/qc/busco/{{sample}}/short_summary.specific.{config["busco_lineage"]}.{{sample}}.txt"
     output:
         "results/qc/busco/reports/short_summary_{sample}.txt"
     shell:
