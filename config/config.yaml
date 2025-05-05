@@ -9,3 +9,6 @@ trimmomatic:
   minlen: 36
 
 kraken-db: /buffer/ag_bsc/pmsb_workflows_2025/team4_ensemble_assembly/kraken-db
+
+# --- Paths to external reference data ---
+human_genome_fasta: "/buffer/ag_bsc/pmsb_workflows_2025/team4_ensemble_assembly/ncbi_dataset/data/GCF_009914755.1/GCF_009914755.1_T2T-CHM13v2.0_genomic.fna"

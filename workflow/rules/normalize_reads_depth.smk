@@ -1,4 +1,6 @@
 rule normalize_reads_depth:
+    conda:
+        "../env/bbmap_env.yaml"
     input:
         # Adjust path based on previous rule output
         r1="results/cleaned/{sample}_classified_nonhuman_1.fq",
@@ -9,7 +11,7 @@ rule normalize_reads_depth:
         norm_r2="results/normalized/{sample}_normalized_2.fq",
         hist="results/normalized/{sample}_depth_histogram.txt" # Optional histogram output
     params:
-        target_depth=100,  # Set the desired target depth (adjust as needed)
+        target_depth=50,  # Set the desired target depth (adjust as needed)
         min_depth=5      # Optional: minimum depth to keep reads
     log:
         "results/logs/normalize_reads_depth/{sample}_normalize.log"

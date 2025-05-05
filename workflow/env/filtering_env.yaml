@@ -1,0 +1,8 @@
+name: filtering_env
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - samtools # Or specify version, e.g., samtools=1.19
+  - bedtools # Or specify version, e.g., bedtools=2.31.1
