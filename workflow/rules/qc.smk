@@ -83,9 +83,22 @@ rule multiqc_all:
         """
 
 
+# (separat aufrufbar)
+rule busco_download:
+    output:
+        lineage_dir = directory("busco_downloads/lineages/{lineage}")
+    conda:
+        "../env/busco.yaml"
+    shell:
+        """
+        busco --download {wildcards.lineage} -o temp_download -l {output.lineage_dir}
+        """
+
+
 rule busco:
     input:
-        assembly="results/assembly/all_assemblies/{sample}_contigs.fasta"
+        assembly="results/assembly/all_assemblies/{sample}_contigs.fasta",
+        lineage_dir = directory(f"busco_downloads/lineages/{config["busco_lineage"]}")
     output:
         f"results/qc/busco/{{sample}}/short_summary.specific.{config["busco_lineage"]}.{{sample}}.txt"
     conda:
@@ -95,7 +108,7 @@ rule busco:
         "results/logs/busco/{sample}.log"
     shell:
         """
-        busco -q -c {threads} -f -m genome -l {config[busco_lineage]} -o results/qc/busco/{wildcards.sample} -i {input.assembly} > {log} 2>&1
+        busco -q -c {threads} -f -m genome -l {input.lineage_dir} -o results/qc/busco/{wildcards.sample} -i {input.assembly} > {log} 2>&1
         """
 
 
