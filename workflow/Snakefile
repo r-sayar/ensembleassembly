@@ -18,6 +18,6 @@ rule all:
         "results/qc/multiqc_all/multiqc_report.html",
         "results/qc/multiqc_raw/multiqc_report.html",
         "results/qc/multiqc_trimmed/multiqc_report.html",
-        expand("results/assembly/{sample}/contigs.fasta", sample=samples.index)
+        expand("results/assembly/denovo/{sample}/contigs.fasta", sample=samples.index)
 
         
