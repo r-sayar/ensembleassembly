@@ -185,3 +185,6 @@ busco_downloads/
 
 resources/*
 ensembleassembly.code-workspace
+
+wget-log
+wget-log.*
