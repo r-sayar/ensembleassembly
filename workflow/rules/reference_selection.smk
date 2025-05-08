@@ -31,9 +31,12 @@ def use_best_reference(wildcards):
         best_reference = f.readline().strip().split(": ")[1]
     return best_reference
 
-#TODO: implement
 rule process_best_reference:
     input:
         best_reference=lambda wildcards: use_best_reference(wildcards)
-    run:
-        raise NotImplementedError("The 'process_best_reference' rule hasnt been implemented.")
+    output:
+        references="results/references/{sample}_{reference}.fasta"
+    shell:
+        """
+        cp data/references/{input.best_reference}.fasta {output.references}
+        """
