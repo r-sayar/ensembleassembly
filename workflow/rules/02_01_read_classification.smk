@@ -7,8 +7,9 @@ rule classify_reads:
     #     r1="/buffer/ag_bsc/pmsb_workflows_2025/team4_ensemble_assembly/DATA/SET1/{sample}_Illumina_MiSeq_paired_end_sequencing_1.fastq.gz",
     #     r2="/buffer/ag_bsc/pmsb_workflows_2025/team4_ensemble_assembly/DATA/SET1/{sample}_Illumina_MiSeq_paired_end_sequencing_2.fastq.gz"
     input:
-        r1="/buffer/ag_bsc/pmsb_workflows_2025/team4_ensemble_assembly/personal-data/{sample}_10_reads_1.fastq.gz", 
-        r2="/buffer/ag_bsc/pmsb_workflows_2025/team4_ensemble_assembly/personal-data/{sample}_10_reads_2.fastq.gz"
+        r1="results/trim/{sample}_trim_forward_paired.fq.gz",
+        r2="results/trim/{sample}_trim_reverse_paired.fq.gz",
+        
     output:
         #classified and unclassified reads must have the same path! and need to set in shell as well
         #TODO: remove the Kraken2 from the name 
@@ -24,7 +25,7 @@ rule classify_reads:
         "results/logs/read_classification/{sample}-classify-reads.log",
     threads: 8
     shell:
-        #kraken2 doesnt throw error if the input doesnt exist!!
+        #kraken2 doesnt throw error if the input doesnt exist!! -> 
         """
         mkdir -p "results/kraken2/{wildcards.sample}"
         mkdir -p "results/logs/read_classification"

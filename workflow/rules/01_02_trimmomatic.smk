@@ -1,3 +1,4 @@
+
 rule trimm:
     input:
         r1 = lambda wildcards: samples.at[wildcards.sample, 'fq1'],

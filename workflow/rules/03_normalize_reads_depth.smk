@@ -2,9 +2,8 @@ rule normalize_reads_depth:
     conda:
         "../env/bbmap_env.yaml"
     input:
-        # Adjust path based on previous rule output
-        r1="results/cleaned/{sample}_classified_nonhuman_1.fq",
-        r2="results/cleaned/{sample}_classified_nonhuman_2.fq"
+        r1="results/filtered/{sample}_1.fq",
+        r2="results/filtered/{sample}_2.fq",
     output:
         # Define output paths for normalized reads
         norm_r1="results/normalized/{sample}_normalized_1.fq",
