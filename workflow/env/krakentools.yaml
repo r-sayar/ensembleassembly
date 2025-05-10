@@ -5,3 +5,4 @@ channels:
   - defaults
 dependencies:
   - krakentools
+  - kraken2

@@ -2,7 +2,6 @@ rule ragtag_fill_gaps:
     conda:
         "envs/ragtag.yaml"
     input:
-    
         assembly="results/references/{sample}_{reference}.fasta",
         reference="results/{reference}.fasta"
     output:

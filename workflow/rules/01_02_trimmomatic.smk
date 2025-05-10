@@ -13,7 +13,7 @@ rule trimm:
     log:
         "results/logs/{sample}_trimmomatic.log"
     shell:
-        """workflow/rules/trimmomatic.smk
+        """
         trimmomatic PE \
         {input.r1} {input.r2} \
         {output.forward_paired} {output.forward_unpaired} \
