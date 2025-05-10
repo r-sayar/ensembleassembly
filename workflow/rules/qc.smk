@@ -107,7 +107,7 @@ rule busco:
         "../env/busco.yaml"
     threads: 5
     log:
-        "results/logs/busco/{stage}//{sample}.log"
+        "results/logs/busco/{stage}/{sample}.log"
     shell:
         """
         busco -q -c {threads} -f -m genome -l {input.lineage_dir} -o results/qc/busco/{wildcards.stage}/{wildcards.sample} -i {input.assembly} > {log} 2>&1
