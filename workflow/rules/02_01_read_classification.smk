@@ -6,8 +6,6 @@ rule classify_reads:
     # input:
     #     r1="/buffer/ag_bsc/pmsb_workflows_2025/team4_ensemble_assembly/DATA/SET1/{sample}_Illumina_MiSeq_paired_end_sequencing_1.fastq.gz",
     #     r2="/buffer/ag_bsc/pmsb_workflows_2025/team4_ensemble_assembly/DATA/SET1/{sample}_Illumina_MiSeq_paired_end_sequencing_2.fastq.gz"
-    conda:
-        "../env/krakentools.yaml"
     input:
         r1="results/trim/{sample}_trim_forward_paired.fq.gz",
         r2="results/trim/{sample}_trim_reverse_paired.fq.gz",     
@@ -20,8 +18,10 @@ rule classify_reads:
         kraken2_unclassified2="results/kraken2/{sample}/unclassified-reads_2.fq",
         kraken2_report="results/kraken2/{sample}/{sample}.k2report",
         kraken2_stdout="results/kraken2/{sample}/{sample}.kraken2.stdout"
+    conda:
+        "../env/krakentools.yaml"
     params:
-        kraken_db=config['kraken-db'],
+        kraken_db=config['kraken-db2'],
     log:
         "results/logs/read_classification/{sample}-classify-reads.log",
     threads: 8
@@ -51,8 +51,8 @@ rule clean_reads_with_kraken_test:
         "../env/krakentools.yaml"
     input:
         # Input the paired-end classified files
-        classified_r1="results/kraken2/{sample}/classified-reads_1.fq",
-        classified_r2="results/kraken2/{sample}/classified-reads_2.fq",
+        r1="results/trim/{sample}_trim_forward_paired.fq.gz",
+        r2="results/trim/{sample}_trim_reverse_paired.fq.gz",
         # *** ADD THIS: Input the standard Kraken2 output ***
         kraken2_stdout="results/kraken2/{sample}/{sample}.kraken2.stdout"
     output:
@@ -70,8 +70,8 @@ rule clean_reads_with_kraken_test:
             -k {input.kraken2_stdout} \
             -o {output.cleaned_r1} \
             -o2 {output.cleaned_r2} \
-            -s1 {input.classified_r1} \
-            -s2 {input.classified_r2} \
+            -s1 {input.r1} \
+            -s2 {input.r2} \
             --exclude --taxid {params.human_taxid} \
             --fastq-output \
             2> {log}
