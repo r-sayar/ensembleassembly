@@ -18,3 +18,8 @@ human_genome_fasta: "/buffer/ag_bsc/pmsb_workflows_2025/team4_ensemble_assembly/
 human_genome_fasta2: "/buffer/ag_bsc/pmsb_workflows_2025/team4_ensemble_assembly/ensembleassembly/resources/genomes/GCF_009914755.1_T2T-CHM13v2.0_genomic.fna"
 
 busco_lineage: "enterobacterales_odb10"
+
+stages:
+  - denovo
+  #- final
+

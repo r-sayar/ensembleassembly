@@ -3,8 +3,8 @@ rule spades_assembly:
         fq1="results/normalized/{sample}_normalized_1.fq",
         fq2="results/normalized/{sample}_normalized_2.fq",
     output:
-        contigs = "results/assembly/{sample}/contigs.fasta",
-        scaffolds = "results/assembly/{sample}/scaffolds.fasta"
+        contigs = "results/assembly/denovo/{sample}/contigs.fasta",
+        scaffolds = "results/assembly/denovo/{sample}/scaffolds.fasta"
     conda:
         "../env/myenv.yaml"
     log:
@@ -15,7 +15,7 @@ rule spades_assembly:
         spades.py \
             -1 {input.fq1} \
             -2 {input.fq2} \
-            -o results/assembly/{wildcards.sample} \
+            -o results/assembly/denovo/{wildcards.sample} \
             -t {threads} \
             --only-assembler \
             > {log} 2>&1
@@ -24,9 +24,9 @@ rule spades_assembly:
 
 rule copy_assemblies:
     input:
-        "results/assembly/{sample}/contigs.fasta"
+        "results/assembly/denovo/{sample}/contigs.fasta"
     output:
-        "results/assembly/all_assemblies/{sample}_contigs.fasta"
+        "results/assembly/denovo/all_assemblies/{sample}_contigs.fasta"
     shell:
         """
         cp {input} {output}
