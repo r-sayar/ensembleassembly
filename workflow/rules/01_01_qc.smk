@@ -71,7 +71,7 @@ rule multiqc_all:
         expand("results/qc/fastqc/trimmed/{sample}_trim_{idx}.html", idx=['1','2'], sample=samples.index),
         # BUSCO + QUAST (denovo and final)
         expand("results/qc/quast/{stage}/{sample}/report.tsv", sample=samples.index, stage=config["stages"]),
-        expand("results/qc/busco/{stage}/reports/short_summary_{sample}.txt", sample=samples.index, stage=config["stages"])
+        expand("results/qc/busco/{stage}/reports/short_summary_{stage}_{sample}.txt", sample=samples.index, stage=config["stages"])
     output:
         report="results/qc/multiqc_all/{stage}/multiqc_report.html",
         report_data=directory("results/qc/multiqc_all/{stage}/multiqc_data/")
@@ -123,7 +123,7 @@ rule busco_summary_for_multiqc:
     input:
         f"results/qc/busco/{{stage}}/{{sample}}/short_summary.specific.{config['busco_lineage']}.{{sample}}.txt"
     output:
-        "results/qc/busco/{stage}/reports/short_summary_{sample}.txt"
+        "results/qc/busco/{stage}/reports/short_summary_{stage}_{sample}.txt"
     shell:
         """
         cp {input} {output}
@@ -134,7 +134,7 @@ rule quast:
     input:
         assembly="results/assembly/{stage}/all_assemblies/{sample}_contigs.fasta"
     output:
-        "results/qc/quast/{stage}/{sample}/report.tsv"
+        report = "results/qc/quast/{stage}/{sample}/report.tsv"
     conda:
         "../env/quast.yaml"
     threads: 5
@@ -142,5 +142,5 @@ rule quast:
         "results/logs/quast/{stage}/{sample}/quast.log",
     shell:
         """
-        quast -t {threads} --glimmer -o results/qc/quast/{wildcards.stage}/{wildcards.sample} {input.assembly} > {log} 2>&1
+        quast -t {threads} --glimmer -o results/qc/quast/{wildcards.stage}/{wildcards.sample} --labels {wildcards.stage}_{wildcards.sample} {input.assembly} > {log} 2>&1
         """
