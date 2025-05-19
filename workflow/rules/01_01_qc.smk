@@ -73,15 +73,20 @@ rule multiqc_all:
         expand("results/qc/quast/{stage}/{sample}/report.tsv", sample=samples.index, stage=config["stages"]),
         expand("results/qc/busco/{stage}/reports/short_summary_{sample}.txt", sample=samples.index, stage=config["stages"])
     output:
-        report="results/qc/multiqc_all/multiqc_report.html",
-        report_data=directory("results/qc/multiqc_all/multiqc_data/")
+        report="results/qc/multiqc_all/{stage}/multiqc_report.html",
+        report_data=directory("results/qc/multiqc_all/{stage}/multiqc_data/")
     conda:
         "../env/myenv.yaml"
     log:
-        "results/logs/multiqc.log"
+        "results/logs/multiqc-{stage}.log"
     shell:
         """
-        multiqc results/qc/fastqc results/qc/quast results/qc/busco/denovo/reports -o results/qc/multiqc_all > {log} 2>&1
+        #maybe this is an issue 
+        #mkdir -p results/qc/quast/{wildcards.stage}
+        #mkdir -p results/qc/busco/{wildcards.stage}/reports
+        #mkdir -p results/qc/multiqc_all/{wildcards.stage}
+
+        multiqc results/qc/fastqc results/qc/quast/{wildcards.stage} results/qc/busco/{wildcards.stage}/reports -o results/qc/multiqc_all/{wildcards.stage} > {log} 2>&1
         """
 
 
@@ -100,9 +105,9 @@ rule busco_download:
 rule busco:
     input:
         assembly="results/assembly/{stage}/all_assemblies/{sample}_contigs.fasta",
-        lineage_dir = directory(f"busco_downloads/lineages/{config["busco_lineage"]}")
+        lineage_dir = directory(f"busco_downloads/lineages/{config['busco_lineage']}")
     output:
-        f"results/qc/busco/{{stage}}/{{sample}}/short_summary.specific.{config["busco_lineage"]}.{{sample}}.txt"
+        f"results/qc/busco/{{stage}}/{{sample}}/short_summary.specific.{config['busco_lineage']}.{{sample}}.txt"
     conda:
         "../env/busco.yaml"
     threads: 5
@@ -116,7 +121,7 @@ rule busco:
 
 rule busco_summary_for_multiqc:
     input:
-        f"results/qc/busco/{{stage}}/{{sample}}/short_summary.specific.{config["busco_lineage"]}.{{sample}}.txt"
+        f"results/qc/busco/{{stage}}/{{sample}}/short_summary.specific.{config['busco_lineage']}.{{sample}}.txt"
     output:
         "results/qc/busco/{stage}/reports/short_summary_{sample}.txt"
     shell:

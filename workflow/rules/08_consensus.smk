@@ -4,7 +4,9 @@ rule generate_consensus:
         r1="results/trim/{sample}_trim_forward_paired.fq.gz",
         r2="results/trim/{sample}_trim_reverse_paired.fq.gz"
     output:
-        consensus_fasta="results/consensus/{sample}_{reference}_consensus.fasta",
+        #this needs to be something else
+        assembly="results/assembly/final/all_assemblies/{sample}_contigs.fasta"
+
     params:
         alignment_bam="results/alignment/{sample}_{reference}.bam", # Intermediate BAM
         sorted_bam="results/alignment/{sample}_{reference}.sorted.bam", # Path for sorted BAM
