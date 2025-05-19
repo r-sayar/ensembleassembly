@@ -70,8 +70,10 @@ rule multiqc_all:
         expand("results/qc/fastqc/raw/{sample}_{idx}.html", idx=['1','2'], sample=samples.index),
         expand("results/qc/fastqc/trimmed/{sample}_trim_{idx}.html", idx=['1','2'], sample=samples.index),
         # BUSCO + QUAST (denovo and final)
-        expand("results/qc/quast/{stage}/{sample}/report.tsv", sample=samples.index, stage=config["stages"]),
-        expand("results/qc/busco/{stage}/reports/short_summary_{stage}_{sample}.txt", sample=samples.index, stage=config["stages"])
+        #havent checked if this works 
+        lambda wildcards: expand(f"results/qc/quast/{wildcards.stage}/{{sample}}/report.tsv", sample=samples.index),
+        lambda wildcards: expand(f"results/qc/busco/{wildcards.stage}/reports/short_summary_{wildcards.stage}_{{sample}}.txt", sample=samples.index)
+
     output:
         report="results/qc/multiqc_all/{stage}/multiqc_report.html",
         report_data=directory("results/qc/multiqc_all/{stage}/multiqc_data/")

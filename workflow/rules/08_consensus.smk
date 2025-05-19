@@ -5,7 +5,7 @@ rule generate_consensus:
         r2="results/trim/{sample}_trim_reverse_paired.fq.gz"
     output:
         #this needs to be something else
-        assembly="results/assembly/final/all_assemblies/{sample}_contigs.fasta"
+        assembly="results/assembly/final/all_assemblies/{sample}_{reference}_contigs.fasta"
 
     params:
         alignment_bam="results/alignment/{sample}_{reference}.bam", # Intermediate BAM
