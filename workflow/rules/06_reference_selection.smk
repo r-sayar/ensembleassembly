@@ -35,8 +35,8 @@ rule process_best_reference:
     input:
         best_reference=lambda wildcards: use_best_reference(wildcards)
     output:
-        references="results/references/{sample}.fasta"
+        reference="results/references/{sample}_reference.fasta"
     shell:
         """
-        cp data/references/{input.best_reference}.fasta {output.references}
+        cp data/references/{input.best_reference}.fasta {output.reference}
         """

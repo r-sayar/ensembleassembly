@@ -2,14 +2,15 @@ rule ragtag_fill_gaps:
     conda:
         "envs/ragtag.yaml"
     input:
-        assembly="results/references/{sample}_{reference}.fasta",
-        reference="results/{reference}.fasta"
+        assembly="results/assembly/denovo/{sample}/contigs.fasta",
+        reference="results/references/{sample}_reference.fasta"
     output:
-        filled_assembly="results/{sample}_{reference}_filled.fasta"
+        ragtag=temp("results/{sample}_reference_filled"),
+        filled_assembly="results/{sample}_reference_filled.fasta"
     log:
-        "logs/ragtag_fill_gaps_{sample}_{reference}.log"
+        "logs/ragtag_fill_gaps_{sample}_reference.log"
     shell:
         """
-        ragtag.py fillgap {input.reference} {input.assembly} -o results/{wildcards.sample}_{wildcards.reference}_filled > {log} 2>&1
-        mv results/{wildcards.sample}_{wildcards.reference}_filled/ragtag.filled.fasta {output.filled_assembly}
+        ragtag.py fillgap {input.reference} {input.assembly} -o {output.ragtag} > {log} 2>&1
+        mv {output.ragtag} {output.filled_assembly}
         """

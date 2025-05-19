@@ -1,18 +1,18 @@
 rule generate_consensus:
     input:
-        reference_assembly="results/{sample}_{reference}_filled.fasta",
+        reference_assembly="results/{sample}_reference_filled.fasta",
         r1="results/trim/{sample}_trim_forward_paired.fq.gz",
         r2="results/trim/{sample}_trim_reverse_paired.fq.gz"
     output:
         #this needs to be something else
-        assembly="results/assembly/final/all_assemblies/{sample}_{reference}_contigs.fasta"
+        assembly="results/assembly/final/all_assemblies/{sample}_contigs.fasta"
 
     params:
-        alignment_bam="results/alignment/{sample}_{reference}.bam", # Intermediate BAM
-        sorted_bam="results/alignment/{sample}_{reference}.sorted.bam", # Path for sorted BAM
-        vcf_file="results/consensus/{sample}_{reference}.vcf.gz" # Path for VCF
+        alignment_bam="results/alignment/{sample}_reference.bam", # Intermediate BAM
+        sorted_bam="results/alignment/{sample}_reference.sorted.bam", # Path for sorted BAM
+        vcf_file="results/consensus/{sample}_reference.vcf.gz" # Path for VCF
     log:
-        "results/logs/consensus/{sample}_{reference}_consensus.log"
+        "results/logs/consensus/{sample}_reference_consensus.log"
     conda:
         "../env/bwa_samtools_bcftools.yaml" 
     threads: 8
@@ -20,8 +20,6 @@ rule generate_consensus:
         #do we need to add the "final" from stages here?
         """
         mkdir -p results/alignment results/consensus results/logs/consensus
-
-        echo "Starting consensus generation for {wildcards.sample} against {wildcards.reference}" > {log}
 
         bwa index {input.reference_assembly} >> {log} 2>&1
 
@@ -37,9 +35,8 @@ rule generate_consensus:
 
         bcftools index {params.vcf_file} >> {log} 2>&1
 
-        bcftools consensus -f {input.reference_assembly} {params.vcf_file} -o {output.consensus_fasta} >> {log} 2>&1
+        bcftools consensus -f {input.reference_assembly} {params.vcf_file} -o {output.assembly} >> {log} 2>&1
 
-        echo "Consensus generation for {wildcards.sample} against {wildcards.reference} finished." >> {log}
 
         """
 
