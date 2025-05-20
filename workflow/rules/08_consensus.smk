@@ -1,6 +1,7 @@
 rule generate_consensus:
     input:
-        reference_assembly="results/{sample}_reference_filled.fasta",
+        reference_assembly="results/assembly/patched_reference/{sample}_patched_contigs.fasta",
+
         r1="results/trim/{sample}_trim_forward_paired.fq.gz",
         r2="results/trim/{sample}_trim_reverse_paired.fq.gz"
     output:
@@ -18,6 +19,7 @@ rule generate_consensus:
     threads: 8
     shell:
         #do we need to add the "final" from stages here?
+        #we also should split this up into several rules -> there can be a lot of intermediate files
         """
         mkdir -p results/alignment results/consensus results/logs/consensus
 
@@ -30,7 +32,7 @@ rule generate_consensus:
 
         samtools index -@ {threads} {params.sorted_bam} >> {log} 2>&1
 
-        samtools mpileup -uf {input.reference_assembly} {params.sorted_bam} 2>> {log} | \
+        bcftools mpileup -f {input.reference_assembly} {params.sorted_bam} 2>> {log} | \
             bcftools call -c --ploidy 1 -Oz -o {params.vcf_file} >> {log} 2>&1
 
         bcftools index {params.vcf_file} >> {log} 2>&1

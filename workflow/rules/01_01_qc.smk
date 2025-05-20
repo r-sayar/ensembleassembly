@@ -77,6 +77,7 @@ rule multiqc_all:
     output:
         report="results/qc/multiqc_all/{stage}/multiqc_report.html",
         report_data=directory("results/qc/multiqc_all/{stage}/multiqc_data/")
+        
     conda:
         "../env/myenv.yaml"
     log:
