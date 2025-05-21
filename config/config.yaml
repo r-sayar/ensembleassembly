@@ -1,4 +1,4 @@
-samples: "resources/samples/sample-simple.tsv"
+samples: "resources/samples/sample.tsv"
 
 trimmomatic:
   adapters: "resources/Trimmomatic-0-2.39/adapters/NexteraPE-PE.fa"
