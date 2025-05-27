@@ -11,7 +11,9 @@ rule generate_consensus:
     params:
         alignment_bam="results/alignment/{sample}_reference.bam", # Intermediate BAM
         sorted_bam="results/alignment/{sample}_reference.sorted.bam", # Path for sorted BAM
-        vcf_file="results/consensus/{sample}_reference.vcf.gz" # Path for VCF
+        vcf_file="results/consensus/{sample}_reference.vcf.gz", # Path for VCF
+        filtered_vcf="results/consensus/{sample}_filtered.vcf.gz",
+        depth_threshold=10
     log:
         "results/logs/consensus/{sample}_reference_consensus.log"
     conda:
@@ -36,6 +38,10 @@ rule generate_consensus:
             bcftools call -c --ploidy 1 -Oz -o {params.vcf_file} >> {log} 2>&1
 
         bcftools index {params.vcf_file} >> {log} 2>&1
+
+        bcftools filter -e "DP<{params.depth_threshold}" -s LowCov -Oz \
+            -o {params.filtered_vcf} {params.vcf_file} >> {log} 2>&1
+        bcftools index {params.filtered_vcf} >> {log} 2>&1
 
         bcftools consensus -f {input.reference_assembly} {params.vcf_file} -o {output.assembly} >> {log} 2>&1
 

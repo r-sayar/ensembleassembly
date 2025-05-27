@@ -145,5 +145,5 @@ rule quast:
         "results/logs/quast/{stage}/{sample}/quast.log",
     shell:
         """
-        quast -t {threads} --glimmer -o results/qc/quast/{wildcards.stage}/{wildcards.sample} --labels {wildcards.stage}_{wildcards.sample} {input.assembly} > {log} 2>&1
+        quast -t {threads} --glimmer --split-scaffolds -o results/qc/quast/{wildcards.stage}/{wildcards.sample} --labels {wildcards.stage}_{wildcards.sample} {input.assembly} > {log} 2>&1
         """
