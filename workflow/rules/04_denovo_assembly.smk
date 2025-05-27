@@ -10,6 +10,8 @@ rule spades_assembly:
     log:
         "results/logs/{sample}_assembly.log"
     threads: 8
+    params:
+        spades_opts = config["spades"].get("options", "")
     shell:
         """
         spades.py \
@@ -17,7 +19,7 @@ rule spades_assembly:
             -2 {input.fq2} \
             -o results/assembly/denovo/{wildcards.sample} \
             -t {threads} \
-            --only-assembler \
+            {params.spades_opts} \
             > {log} 2>&1
         """
 

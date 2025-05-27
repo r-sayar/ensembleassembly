@@ -19,6 +19,10 @@ human_genome_fasta2: "/buffer/ag_bsc/pmsb_workflows_2025/team4_ensemble_assembly
 
 busco_lineage: "enterobacterales_odb10"
 
+spades:
+  options: "--only-assembler"
+
+
 stages:
   - denovo
   - final
