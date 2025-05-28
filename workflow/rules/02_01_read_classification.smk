@@ -3,9 +3,6 @@
 #env needs to be activated before
 
 rule classify_reads:
-    # input:
-    #     r1="/buffer/ag_bsc/pmsb_workflows_2025/team4_ensemble_assembly/DATA/SET1/{sample}_Illumina_MiSeq_paired_end_sequencing_1.fastq.gz",
-    #     r2="/buffer/ag_bsc/pmsb_workflows_2025/team4_ensemble_assembly/DATA/SET1/{sample}_Illumina_MiSeq_paired_end_sequencing_2.fastq.gz"
     input:
         r1="results/trim/{sample}_trim_forward_paired.fq.gz",
         r2="results/trim/{sample}_trim_reverse_paired.fq.gz",     

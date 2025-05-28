@@ -70,9 +70,10 @@ rule multiqc_all:
         expand("results/qc/fastqc/raw/{sample}_{idx}.html", idx=['1','2'], sample=samples.index),
         expand("results/qc/fastqc/trimmed/{sample}_trim_{idx}.html", idx=['1','2'], sample=samples.index),
         # BUSCO + QUAST (denovo and final)
-        #havent checked if this works 
         lambda wildcards: expand(f"results/qc/quast/{wildcards.stage}/{{sample}}/report.tsv", sample=samples.index),
-        lambda wildcards: expand(f"results/qc/busco/{wildcards.stage}/reports/short_summary_{wildcards.stage}_{{sample}}.txt", sample=samples.index)
+        lambda wildcards: expand(f"results/qc/busco/{wildcards.stage}/reports/short_summary_{wildcards.stage}_{{sample}}.txt", sample=samples.index),
+        # Kraken2
+        expand("results/kraken2/{sample}/{sample}.k2report", sample=samples.index)
 
     output:
         report="results/qc/multiqc_all/{stage}/multiqc_report.html",
@@ -89,7 +90,7 @@ rule multiqc_all:
         #mkdir -p results/qc/busco/{wildcards.stage}/reports
         #mkdir -p results/qc/multiqc_all/{wildcards.stage}
 
-        multiqc results/qc/fastqc results/qc/quast/{wildcards.stage} results/qc/busco/{wildcards.stage}/reports -o results/qc/multiqc_all/{wildcards.stage} > {log} 2>&1
+        multiqc results/qc/fastqc results/qc/quast/{wildcards.stage} results/qc/busco/{wildcards.stage}/reports results/kraken2 -o results/qc/multiqc_all/{wildcards.stage} > {log} 2>&1
         """
 
 
