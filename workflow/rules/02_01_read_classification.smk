@@ -21,7 +21,7 @@ rule classify_reads:
     conda:
         "../env/krakentools.yaml"
     params:
-        kraken_db=config['kraken-db2'],
+        kraken_db=config['kraken-db'],
     log:
         "results/logs/read_classification/{sample}-classify-reads.log",
     threads: 8

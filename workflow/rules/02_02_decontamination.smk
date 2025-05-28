@@ -3,7 +3,7 @@ INDEX_PREFIX = "results/index/human_index"
 rule create_index:
     conda: "../env/mapping_env.yaml" 
     input:
-        fasta=config["human_genome_fasta2"]
+        fasta=config["contamination"]
     output:
         multiext(INDEX_PREFIX, ".amb", ".ann", ".bwt", ".pac", ".sa")
     log:
