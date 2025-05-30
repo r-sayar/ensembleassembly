@@ -34,7 +34,7 @@ rule align_to_human_genome:
         bwa mem -t {threads} {INDEX_PREFIX} {input.cleaned_r1} {input.cleaned_r2} | samtools view -bS - > {output.bam} 2> {log}
         """
 
-rule remove_human_reads:
+rule remove_host_reads:
     conda:
         "../env/filtering_env.yaml" 
     input:
@@ -43,8 +43,8 @@ rule remove_human_reads:
         filtered_r1="results/filtered/{sample}_1.fq",
         filtered_r2="results/filtered/{sample}_2.fq",
     log:
-        "results/logs/remove_human_reads/{sample}.log"
+        "results/logs/remove_host_reads/{sample}.log"
     shell:
         """
-        samtools view -b -f 12 -F 256 {input.bam} | bedtools bamtofastq -i - -fq {output.filtered_r1} -fq2 {output.filtered_r2} 2> {log}
+        samtools fastq -f 12 -F 256 -1 {output.filtered_r1} -2 {output.filtered_r2} {input.bam} 2> {log}
         """
