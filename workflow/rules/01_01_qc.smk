@@ -72,13 +72,9 @@ rule multiqc_all:
         # BUSCO + QUAST (denovo and final)
         lambda wildcards: expand(f"results/qc/quast/{wildcards.stage}/{{sample}}/report.tsv", sample=samples.index),
         lambda wildcards: expand(f"results/qc/busco/{wildcards.stage}/reports/short_summary_{wildcards.stage}_{{sample}}.txt", sample=samples.index),
-        # Kraken2
-        expand("results/kraken2/{sample}/{sample}.k2report", sample=samples.index)
-
     output:
         report="results/qc/multiqc_all/{stage}/multiqc_report.html",
-        report_data=directory("results/qc/multiqc_all/{stage}/multiqc_data/")
-        
+        report_data=directory("results/qc/multiqc_all/{stage}/multiqc_data/")      
     conda:
         "../env/myenv.yaml"
     log:
@@ -90,8 +86,29 @@ rule multiqc_all:
         #mkdir -p results/qc/busco/{wildcards.stage}/reports
         #mkdir -p results/qc/multiqc_all/{wildcards.stage}
 
-        multiqc results/qc/fastqc results/qc/quast/{wildcards.stage} results/qc/busco/{wildcards.stage}/reports results/kraken2 -o results/qc/multiqc_all/{wildcards.stage} > {log} 2>&1
+        multiqc results/qc/fastqc results/qc/quast/{wildcards.stage} results/qc/busco/{wildcards.stage}/reports -o results/qc/multiqc_all/{wildcards.stage} > {log} 2>&1
         """
+
+rule multiqc_kraken:
+    input:
+        # Kraken2
+        expand("results/kraken2/{sample}/{sample}.k2report", sample=samples.index)
+
+    output:
+        report="results/qc/multiqc_kraken/multiqc_report.html",
+        report_data=directory("results/qc/multiqc_kraken/multiqc_data/")
+        
+    conda:
+        "../env/myenv.yaml"
+    log:
+        "results/logs/multiqc_kraken.log"
+    shell:
+        """
+        multiqc results/kraken2 -o results/qc/multiqc_kraken > {log} 2>&1
+        """
+
+    
+
 
 
 # (separat aufrufbar)
