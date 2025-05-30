@@ -15,6 +15,7 @@ rule spades_assembly:
     shell:
         """
         spades.py \
+            --only-assembler \
             -1 {input.fq1} \
             -2 {input.fq2} \
             -o results/assembly/denovo/{wildcards.sample} \

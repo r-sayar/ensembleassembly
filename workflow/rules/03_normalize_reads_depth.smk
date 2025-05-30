@@ -5,18 +5,15 @@ rule normalize_reads_depth:
         r1="results/filtered/{sample}_1.fq",
         r2="results/filtered/{sample}_2.fq",
     output:
-        # Define output paths for normalized reads
         norm_r1="results/normalized/{sample}_normalized_1.fq",
         norm_r2="results/normalized/{sample}_normalized_2.fq",
-        hist="results/normalized/{sample}_depth_histogram.txt" # Optional histogram output
+        hist="results/normalized/{sample}_depth_histogram.txt"
     params:
-        target_depth=50,  # Set the desired target depth (adjust as needed)
-        min_depth=5      # Optional: minimum depth to keep reads
+        target_depth=config["normalize_reads"]["target_depth"],
+        min_depth=config["normalize_reads"]["min_depth"]
     log:
         "results/logs/normalize_reads_depth/{sample}_normalize.log"
-    conda:
-        "../env/bbmap_env.yaml"  # Path to your conda environment YAML file for bbmap
-    threads: 8 # bbnorm can use multiple threads
+    threads: 8
     shell:
         """
         bbnorm.sh \

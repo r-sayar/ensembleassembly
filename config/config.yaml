@@ -16,10 +16,13 @@ contamination: "/buffer/ag_bsc/pmsb_workflows_2025/team4_ensemble_assembly/ensem
 busco_lineage: "enterobacterales_odb10"
 
 spades:
-  options: "--only-assembler"
+  options: 
 
 
 stages:
   - denovo
   - final
 
+normalize_reads:
+  target_depth: 50
+  min_depth: 5
