@@ -32,13 +32,7 @@ rule generate_consensus:
 
         samtools index -@ {threads} {params.sorted_bam} >> {log} 2>&1
 
-        bcftools mpileup -f {input.reference_assembly} {params.sorted_bam} 2>> {log} | \
-            bcftools call -c --ploidy 1 -Oz -o {params.vcf_file} >> {log} 2>&1
-
-        bcftools index {params.vcf_file} >> {log} 2>&1
-
-        bcftools consensus -f {input.reference_assembly} {params.vcf_file} -o {output.assembly} >> {log} 2>&1
-
+        samtools consensus {params.sorted_bam} -o {output.assembly}
 
         """
 
