@@ -6,7 +6,7 @@ rule spades_assembly:
         contigs = "results/assembly/denovo/{sample}/contigs.fasta",
         scaffolds = "results/assembly/denovo/{sample}/scaffolds.fasta"
     conda:
-        "../env/myenv.yaml"
+        "../env/report_trimm.yaml"
     log:
         "results/logs/{sample}_assembly.log"
     threads: 8
