@@ -70,8 +70,26 @@ rule multiqc_all:
         expand("results/qc/fastqc/raw/{sample}_{idx}.html", idx=['1','2'], sample=samples.index),
         expand("results/qc/fastqc/trimmed/{sample}_trim_{idx}.html", idx=['1','2'], sample=samples.index),
         # BUSCO + QUAST (denovo and final)
-        lambda wildcards: expand(f"results/qc/quast/{wildcards.stage}/{{sample}}/report.tsv", sample=samples.index),
-        lambda wildcards: expand(f"results/qc/busco/{wildcards.stage}/reports/short_summary_{wildcards.stage}_{{sample}}.txt", sample=samples.index),
+        
+        lambda wildcards: (
+            [
+                f"results/qc/quast/final/{sample}_{get_reference_name()}/report.tsv"
+                for sample in samples.index
+            ] if wildcards.stage == "final" else
+            expand(
+                f"results/qc/quast/{wildcards.stage}/{{sample}}/report.tsv", sample=samples.index
+            )
+        ),
+        lambda wildcards: (
+            [
+                f"results/qc/busco/final/reports/short_summary_final_{sample}_{get_reference_name()}.txt"
+                for sample in samples.index
+            ] if wildcards.stage == "final" else
+            expand(
+                f"results/qc/busco/{wildcards.stage}/reports/short_summary_{wildcards.stage}_{{sample}}.txt",
+                sample=samples.index
+            )
+        ),
     output:
         report="results/qc/multiqc_all/{stage}/multiqc_report.html",
         report_data=directory("results/qc/multiqc_all/{stage}/multiqc_data/")      
@@ -139,7 +157,31 @@ rule busco:
         busco -q -c {threads} -f -m genome -l {input.lineage_dir} -o results/qc/busco/{wildcards.stage}/{wildcards.sample} -i {input.assembly} > {log} 2>&1
         """
 
+rule busco_final:
+    input:
+        assembly= "results/assembly/final/{sample}_{reference}_contigs.fasta",
+        lineage_dir = directory(f"busco_downloads/lineages/{config['busco_lineage']}")
+    output:
+        f"results/qc/busco/final/{{sample}}_{{reference}}/short_summary.specific.{config['busco_lineage']}.{{sample}}_{{reference}}.txt"
+    conda:
+        "../env/busco.yaml"
+    threads: 5
+    log:
+        "results/logs/consensus/final/{sample}_{reference}.log"
+    shell:
+        """
+        busco -q -c {threads} -f -m genome -l {input.lineage_dir} -o results/qc/busco/{wildcards.stage}/{wildcards.sample} -i {input.assembly} > {log} 2>&1
+        """
 
+rule busco_summary_for_multiqc_final:
+    input:
+        f"results/qc/busco/final/{{sample}}_{{reference}}/short_summary.specific.{config['busco_lineage']}.{{sample}}_{{reference}}.txt"
+    output:
+        "results/qc/busco/final/reports/short_summary_final_{sample}_{reference}.txt"
+    shell:
+        """
+        cp {input} {output}
+        """
 rule busco_summary_for_multiqc:
     input:
         f"results/qc/busco/{{stage}}/{{sample}}/short_summary.specific.{config['busco_lineage']}.{{sample}}.txt"
@@ -164,4 +206,19 @@ rule quast:
     shell:
         """
         quast -t {threads} --glimmer -o results/qc/quast/{wildcards.stage}/{wildcards.sample} --labels {wildcards.stage}_{wildcards.sample} {input.assembly} > {log} 2>&1
+        """
+
+rule quast_final:
+    input:
+        assembly="results/assembly/final/all_assemblies/{sample}_{reference}_contigs.fasta"
+    output:
+        report = "results/qc/quast/final/{sample}_{reference}/report.tsv"
+    conda:
+        "../env/quast.yaml"
+    threads: 5
+    log:
+        "results/logs/quast/final/{sample}_{reference}/quast.log",
+    shell:
+        """
+        quast -t {threads} --glimmer -o results/qc/quast/final/{wildcards.sample} --labels final_{wildcards.sample} {input.assembly} > {log} 2>&1
         """

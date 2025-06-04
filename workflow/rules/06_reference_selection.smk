@@ -7,17 +7,22 @@ checkpoint select_best_reference:
         "../scripts/select_best_reference.py"
 
 
-def use_best_reference(wildcards):
+def get_reference_name():
     checkpoint_output = checkpoints.select_best_reference.get()
     with open(checkpoint_output.output.best_reference) as f:
-        best_reference = "results/assembly/denovo/all_assemblies/"+f.readline().strip().split(": ")[1] + "_contigs.fasta"
-    return best_reference
+        return f.readline().strip().split(": ")[1]
+
+
+def use_best_reference(wildcards):
+    best_reference = get_reference_name()
+    reference_path = "results/assembly/denovo/all_assemblies/" + best_reference + "_contigs.fasta"
+    return reference_path
 
 rule process_best_reference:
     input:
         best_reference=lambda wildcards: use_best_reference(wildcards)
     output:
-        reference="results/references/{sample}_reference.fasta"
+        reference="results/references/{sample}_{reference}.fasta"
     shell:
         """
         cp {input.best_reference} {output.reference}

@@ -1,19 +1,19 @@
 rule generate_consensus:
     input:
-        reference_assembly="results/assembly/patched_reference/{sample}_patched_contigs.fasta",
+        reference_assembly="results/assembly/patched_reference/{sample}_{reference}_patched_contigs.fasta" ,
 
         r1="results/trim/{sample}_trim_forward_paired.fq.gz",
         r2="results/trim/{sample}_trim_reverse_paired.fq.gz"
     output:
         #this needs to be something else
-        assembly="results/assembly/final/all_assemblies/{sample}_contigs.fasta"
+        assembly="results/assembly/final/all_assemblies/{sample}_{reference}_contigs.fasta"
 
     params:
         alignment_bam="results/alignment/{sample}_reference.bam", # Intermediate BAM
         sorted_bam="results/alignment/{sample}_reference.sorted.bam", # Path for sorted BAM
         vcf_file="results/consensus/{sample}_reference.vcf.gz" # Path for VCF
     log:
-        "results/logs/consensus/{sample}_reference_consensus.log"
+        "results/logs/consensus/{sample}_{reference}_consensus.log"
     conda:
         "../env/bwa_samtools_bcftools.yaml" 
     threads: 8
