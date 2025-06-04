@@ -14,7 +14,7 @@ rule ragtag_fill_gaps:
         "logs/ragtag_patch_{sample}.log" # Adjusted log file name
     shell:
         """
-        ragtag.py patch {input.assembly} {input.reference} -o {output.ragtag_patch_dir} > {log} 2>&1
+        ragtag.py patch -s 500 {input.assembly} {input.reference} -o {output.ragtag_patch_dir} > {log} 2>&1
         
         mv {output.ragtag_patch_dir}/ragtag.patch.fasta {output.patched_assembly}
         """
