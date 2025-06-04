@@ -1,4 +1,4 @@
-name: myenv
+name: report_trimm
 channels:
   - conda-forge
   - bioconda

@@ -9,7 +9,7 @@ rule trimm:
         reverse_paired="results/trim/{sample}_trim_reverse_paired.fq.gz",
         reverse_unpaired="results/trim/{sample}_trim_reverse_unpaired.fq.gz"
     conda:
-        "../env/myenv.yaml"
+        "../env/report_trimm.yaml"
     log:
         "results/logs/{sample}_trimmomatic.log"
     shell:

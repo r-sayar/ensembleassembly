@@ -39,7 +39,7 @@ rule multiqc_raw:
         report="results/qc/multiqc_raw/multiqc_report.html",
         report_data=directory("results/qc/multiqc_raw/multiqc_data/")
     conda:
-        "../env/myenv.yaml"
+        "../env/report_trimm.yaml"
     log:
         "results/logs/multiqc_raw.log"
     shell:
@@ -55,7 +55,7 @@ rule multiqc_trimmed:
         report="results/qc/multiqc_trimmed/multiqc_report.html",
         report_data=directory("results/qc/multiqc_trimmed/multiqc_data/")
     conda:
-        "../env/myenv.yaml"
+        "../env/report_trimm.yaml"
     log:
         "results/logs/multiqc_trimmed.log"
     shell:
@@ -94,7 +94,7 @@ rule multiqc_all:
         report="results/qc/multiqc_all/{stage}/multiqc_report.html",
         report_data=directory("results/qc/multiqc_all/{stage}/multiqc_data/")      
     conda:
-        "../env/myenv.yaml"
+        "../env/report_trimm.yaml"
     log:
         "results/logs/multiqc-{stage}.log"
     shell:
@@ -117,7 +117,7 @@ rule multiqc_kraken:
         report_data=directory("results/qc/multiqc_kraken/multiqc_data/")
         
     conda:
-        "../env/myenv.yaml"
+        "../env/report_trimm.yaml"
     log:
         "results/logs/multiqc_kraken.log"
     shell:
